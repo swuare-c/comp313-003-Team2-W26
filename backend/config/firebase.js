@@ -7,5 +7,6 @@ app = initializeApp({
 });
 
 const db = getFirestore(app)
+const auth = app.auth();
 
-export {app, db}
+export {app, db, auth}

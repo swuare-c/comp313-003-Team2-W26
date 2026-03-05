@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes.js'
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.status(200).json({ message: "API is running." })
 })
+
+app.use("api/auth", authRoutes);
 
 app.listen(PORT, () => {
     console.log(`API is running on port: ${PORT}.`)
