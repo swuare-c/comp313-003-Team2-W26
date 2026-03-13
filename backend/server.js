@@ -1,19 +1,24 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+// process.env.OPENAI_API_KEY available everywhere in the backend
+require("dotenv").config();
 
-dotenv.config();
+const config = require("./config/config");
+const app = require("./config/express");
+const connectDB = require("./config/mongoose");
 
-const app = express();
-const PORT = process.env.PORT || 5000
+const authRoutes = require("./app/routes/authRoutes");
+const reflectRoutes = require("./app/routes/reflectRoutes");
 
-app.use(cors());
-app.use(express.json());
+app.get("/health", (req, res) => res.json({ ok: true }));
 
-app.get('/', (req, res) => {
-    res.status(200).json({ message: "API is running." })
-})
+app.use("/api/auth", authRoutes);
+app.use("/api/reflect", reflectRoutes);
 
-app.listen(PORT, () => {
-    console.log(`API is running on port: ${PORT}.`)
-})
+const start = async () => {
+    await connectDB();
+
+    app.listen(config.port, () => {
+        console.log(`Server running on port ${config.port}`);
+    });
+};
+
+start();
