@@ -63,7 +63,15 @@ exports.login = async (req, res) => {
 
     res.json({
       message: "Login successful",
-      user: { id: user._id, email: user.email },
+      user: {
+        userId: user._id,
+        email: user.email,
+        displayName: user.displayName,
+        occupation: user.occupation,
+        gender: user.gender,
+        settings: user.settings,
+        createdAt: user.createdAt
+      },
     });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
@@ -75,8 +83,23 @@ exports.logout = (req, res) => {
   res.json({ message: "Logged out" });
 };
 
-exports.me = (req, res) => {
-  res.json({ userId: req.userId });
+exports.me = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-passwordHash");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({
+      userId: user._id,
+      email: user.email,
+      displayName: user.displayName,
+      occupation: user.occupation,
+      gender: user.gender,
+      settings: user.settings,
+      createdAt: user.createdAt
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 // Request password reset: generate token & "send" it
@@ -164,8 +187,65 @@ exports.resetPassword = async (req, res) => {
     return res.json({
       message: "Your password has been reset. You can now log in with it.",
     });
-  } catch (err) {
+    } catch (err) {
     console.error("resetPassword error:", err);
     return res.status(500).json({ message: "Server error" });
-  }
-};
+    }
+    };
+
+    exports.updateProfile = async (req, res) => {
+    try {
+    const { displayName, occupation, gender, settings } = req.body;
+    const user = await User.findById(req.userId);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (displayName !== undefined) user.displayName = displayName;
+    if (occupation !== undefined) user.occupation = occupation;
+    if (gender !== undefined) user.gender = gender;
+    
+    if (settings) {
+      if (settings.theme) user.settings.theme = settings.theme;
+      if (settings.reflectionDepth) user.settings.reflectionDepth = settings.reflectionDepth;
+    }
+
+    await user.save();
+
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        userId: user._id,
+        email: user.email,
+        displayName: user.displayName,
+        occupation: user.occupation,
+        gender: user.gender,
+        settings: user.settings,
+        createdAt: user.createdAt
+      }
+    });
+    } catch (err) {
+    console.error("updateProfile error:", err);
+    res.status(500).json({ message: "Server error" });
+    }
+    };
+
+    exports.deleteAccount = async (req, res) => {
+    try {
+    const userId = req.userId;
+
+    // 1. Delete all reflections associated with this user
+    const Reflection = require("../models/reflection");
+    await Reflection.deleteMany({ user: userId });
+
+    // 2. Delete the user itself
+    await User.findByIdAndDelete(userId);
+
+    // 3. Clear the auth cookie
+    res.clearCookie("token");
+
+    res.json({ message: "Account and history permanently deleted." });
+    } catch (err) {
+    console.error("deleteAccount error:", err);
+    res.status(500).json({ message: "Server error" });
+    }
+    };

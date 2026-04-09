@@ -1,6 +1,7 @@
 // app/controllers/reflectController.js
 const openai = require("../../config/openaiClient");
 const Reflection = require("../models/reflection");
+const config = require("../../config/config");
 
 // Local fallback if OpenAI is not configured or fails
 function fallbackReply(text) {
@@ -29,11 +30,27 @@ exports.reflect = async (req, res) => {
       return res.status(400).json({ message: "Text is required" });
     }
 
+    // 🔹 Fetch user settings to adjust AI behavior
+    const User = require("../models/user");
+    const user = await User.findById(userId);
+    const depth = user?.settings?.reflectionDepth || "standard";
+
+    // 🔹 Build dynamic instructions based on depth
+    let depthInstructions = "";
+    if (depth === "brief") {
+      depthInstructions = "Keep your reply extremely concise (1-2 sentences). Focus only on mirroring the core emotion. Do not ask follow-up questions.";
+    } else if (depth === "in-depth") {
+      depthInstructions = "Provide a more detailed reflection (4-5 sentences). Explore nuances in the user's words and ask 1-2 probing, gentle follow-up questions to encourage deep exploration.";
+    } else {
+      // standard
+      depthInstructions = "Provide a balanced reflection (2-3 sentences). Briefly paraphrase and ask one gentle follow-up question.";
+    }
+
     let reply;
     let source;
 
     // If there's no key, use fallback so the app still works
-    if (!process.env.OPENAI_API_KEY) {
+    if (!config.openaiApiKey) {
       reply = fallbackReply(text);
       source = "fallback_no_api_key";
     } else {
@@ -41,14 +58,13 @@ exports.reflect = async (req, res) => {
       const response = await openai.responses.create({
         model: "gpt-4o-mini",
         instructions:
-          "You are a calm, neutral listening companion having a multi-turn conversation with the user.\n" +
-          "For each reply:\n" +
-          "1. Briefly paraphrase what the user seems to be feeling, in 1–2 sentences.\n" +
-          "2. Optionally ask 0–1 short, gentle follow-up question that encourages self-reflection.\n" +
-          "3. Do NOT give advice, solutions, or instructions. Do NOT diagnose any mental health conditions.\n" +
-          "4. Avoid mentioning self-harm, suicide, or crises. If the user brings them up, gently encourage them to talk to a trusted person or professional without giving instructions.\n" +
-          "5. Keep replies under 80 words.\n" +
-          "6. Respond ONLY as valid JSON with this exact format:\n" +
+          `You are a calm, neutral listening companion having a multi-turn conversation with the user. ${depthInstructions}\n` +
+          "Guidelines:\n" +
+          "1. Briefly paraphrase what the user seems to be feeling.\n" +
+          "2. Do NOT give advice, solutions, or instructions. Do NOT diagnose any mental health conditions.\n" +
+          "3. Avoid mentioning self-harm, suicide, or crises. If the user brings them up, gently encourage them to talk to a trusted person or professional without giving instructions.\n" +
+          "4. Keep replies under 100 words.\n" +
+          "5. Respond ONLY as valid JSON with this exact format:\n" +
           '{ "reply": "..." }',
         input: [
           {
