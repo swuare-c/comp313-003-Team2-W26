@@ -8,9 +8,10 @@ import Tutorial from "./pages/Tutorial";
 import History from "./pages/History";
 import PasswordResetRequest from "./pages/PasswordResetRequest";
 import PasswordReset from "./pages/PasswordReset";
+import Settings from "./pages/Settings"; 
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
-
 
 export default function App() {
   return (
@@ -40,6 +41,16 @@ export default function App() {
         element={
           <ProtectedRoute>
             <History />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* settings */}
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         }
       />
