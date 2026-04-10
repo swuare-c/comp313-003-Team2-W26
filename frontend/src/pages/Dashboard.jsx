@@ -140,36 +140,44 @@ export default function Dashboard() {
             Listening Companion
           </Navbar.Brand>
 
-          <div className="ms-auto d-flex gap-2">
-            <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={newChat}
-              >
-              New Chat
-            </Button>
+   <div className="ms-auto d-flex gap-2">
+  <Button
+    variant="outline-secondary"
+    size="sm"
+    onClick={newChat}
+  >
+    New Chat
+  </Button>
 
-            {/* Tutorial button visible to logged-in users */}
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => navigate("/tutorial")}
-            >
-              Tutorial
-            </Button>
+  <Button
+    variant="outline-secondary"
+    size="sm"
+    onClick={() => navigate("/tutorial")}
+  >
+    Tutorial
+  </Button>
 
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => navigate("/history")}
-            >
-              History
-            </Button>
+  <Button
+    variant="outline-secondary"
+    size="sm"
+    onClick={() => navigate("/history")}
+  >
+    History
+  </Button>
 
-            <Button variant="outline-primary" size="sm" onClick={logout}>
-              Logout
-            </Button>
-          </div>
+  {/* ✅ ADD THIS */}
+  <Button
+    variant="outline-secondary"
+    size="sm"
+    onClick={() => navigate("/settings")}
+  >
+    Settings
+  </Button>
+
+  <Button variant="outline-primary" size="sm" onClick={logout}>
+    Logout
+  </Button>
+</div>
         </Container>
       </Navbar>
 
