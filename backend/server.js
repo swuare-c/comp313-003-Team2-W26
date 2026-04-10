@@ -3,22 +3,19 @@ require("dotenv").config();
 
 const config = require("./config/config");
 const app = require("./config/express");
-const connectDB = require("./config/mongoose");
 
 const authRoutes = require("./app/routes/authRoutes");
 const reflectRoutes = require("./app/routes/reflectRoutes");
 
-app.get("/health", (req, res) => res.json({ ok: true }));
+app.get("/api/health", (req, res) => res.json({ ok: true, env: config.env }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/reflect", reflectRoutes);
 
-const start = async () => {
-    await connectDB();
-
+if (process.env.NODE_ENV !== "production") {
     app.listen(config.port, () => {
         console.log(`Server running on port ${config.port}`);
     });
-};
+}
 
-start();
+module.exports = app;

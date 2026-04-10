@@ -212,44 +212,48 @@ export default function Dashboard() {
             Listening Companion
           </Navbar.Brand>
 
-   <div className="ms-auto d-flex gap-2">
-  <Button
-    variant="outline-secondary"
-    size="sm"
-    onClick={newChat}
-  >
-    New Chat
-  </Button>
+          <Nav className="ms-auto align-items-center gap-2">
+            <Nav.Link as="div" className="p-0">
+              <Button
+                  variant="outline-secondary"
+                  size="sm"
+                  onClick={newChat}
+                  className="px-3"
+                >
+                New Chat
+              </Button>
+            </Nav.Link>
 
-  <Button
-    variant="outline-secondary"
-    size="sm"
-    onClick={() => navigate("/tutorial")}
-  >
-    Tutorial
-  </Button>
-
-  <Button
-    variant="outline-secondary"
-    size="sm"
-    onClick={() => navigate("/history")}
-  >
-    History
-  </Button>
-
-  {/* ✅ ADD THIS */}
-  <Button
-    variant="outline-secondary"
-    size="sm"
-    onClick={() => navigate("/settings")}
-  >
-    Settings
-  </Button>
-
-  <Button variant="outline-primary" size="sm" onClick={logout}>
-    Logout
-  </Button>
-</div>
+            <NavDropdown 
+              title={
+                <span className="text-secondary small">
+                  {user?.displayName || user?.email || "Account"}
+                </span>
+              } 
+              id="profile-dropdown" 
+              align="end"
+            >
+              <NavDropdown.Item onClick={() => navigate("/app")}>
+                <i className="bi bi-house me-2"></i>Home
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate("/settings")}>
+                <i className="bi bi-person-circle me-2"></i>Settings
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate("/history")}>
+                <i className="bi bi-clock-history me-2"></i>History
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate("/tutorial")}>
+                <i className="bi bi-info-circle me-2"></i>Tutorial
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => navigate("/resources")}>
+                <i className="bi bi-heart-pulse me-2"></i>Support Resources
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={logoutAndRedirect} className="text-danger">
+                <i className="bi bi-box-arrow-right me-2"></i>Logout
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
         </Container>
       </Navbar>
 

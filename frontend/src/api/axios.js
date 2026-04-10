@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000",   // backend port
-    withCredentials: true,              // IMPORTANT for HTTPOnly JWT cookie
+    baseURL: import.meta.env.PROD ? "" : "http://localhost:5000",
+    withCredentials: true,
 });
 
 export default api;

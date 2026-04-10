@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
     const fetchMe = async () => {
         try {
             const res = await meApi();
-            setUser({ userId: res.data.userId });
+            setUser(res.data);
         } catch {
             setUser(null);
         } finally {
@@ -46,8 +46,12 @@ export function AuthProvider({ children }) {
         setUser(null);
     };
 
+    const updateUser = (userData) => {
+        setUser(userData);
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, authError, register, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, authError, register, login, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -30,15 +30,15 @@ export default function Login() {
   };
 
   return (
-    <div className="bg-light min-vh-100 min-vw-100 d-flex flex-column">
+    <div className="bg-body-tertiary min-vh-100 min-vw-100 d-flex flex-column text-body">
       <div className="flex-grow-1 d-flex align-items-center justify-content-center py-5">
         <Container style={{ maxWidth: "480px" }}>
           <Row className="justify-content-center">
             <Col>
-              <Card className="border-0 shadow-sm">
+              <Card className="border-0 shadow-sm bg-body">
                 <Card.Body className="p-4 p-md-5">
                   <h3 className="fw-bold mb-2">Welcome back</h3>
-                  <p className="text-muted mb-4">
+                  <p className="text-secondary mb-4">
                     Log in to continue your conversations with your Listening
                     Companion.
                   </p>
@@ -51,18 +51,19 @@ export default function Login() {
 
                   <Form onSubmit={onSubmit}>
                     <Form.Group className="mb-3" controlId="loginEmail">
-                      <Form.Label>Email</Form.Label>
+                      <Form.Label className="small fw-semibold text-uppercase text-secondary">Email</Form.Label>
                       <Form.Control
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
                         required
+                        className="bg-body border-secondary-subtle"
                       />
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="loginPassword">
-                      <Form.Label>Password</Form.Label>
+                      <Form.Label className="small fw-semibold text-uppercase text-secondary">Password</Form.Label>
                       <InputGroup>
                         <Form.Control
                           type={showPassword ? "text" : "password"}
@@ -71,18 +72,13 @@ export default function Login() {
                           placeholder="At least 6 characters"
                           minLength={6}
                           required
+                          className="bg-body border-secondary-subtle"
                         />
                         <Button
                           type="button"
                           onClick={() => setShowPassword((prev) => !prev)}
-                          className="border-start-0 d-flex align-items-center"
-                          style={{
-                            backgroundColor: "#fff",
-                            borderColor: "#ced4da",
-                            color: "#6c757d",
-                            borderTopLeftRadius: 0,
-                            borderBottomLeftRadius: 0,
-                          }}
+                          variant="outline-secondary"
+                          className="border-start-0 d-flex align-items-center bg-body"
                         >
                           <i
                             className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"
@@ -95,7 +91,7 @@ export default function Login() {
                     <Button
                       type="submit"
                       variant="primary"
-                      className="w-100"
+                      className="w-100 py-2 fw-semibold"
                     >
                       Login
                     </Button>
