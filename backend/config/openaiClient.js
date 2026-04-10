@@ -1,13 +1,16 @@
 const OpenAI = require("openai");
+const config = require("./config");
 
-if (!process.env.OPENAI_API_KEY) {
+let openai = null;
+
+if (!config.openaiApiKey) {
     console.warn(
         "OPENAI_API_KEY is not set. The reflect endpoint will fall back to local mock responses."
     );
+} else {
+    openai = new OpenAI({
+        apiKey: config.openaiApiKey,
+    });
 }
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
 
 module.exports = openai;

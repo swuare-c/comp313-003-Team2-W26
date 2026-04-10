@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const config = require("../../config/config");
@@ -6,7 +6,7 @@ const crypto = require("crypto");
 
 const cookieOptions = {
   httpOnly: true,
-  secure: false, // set true in production (HTTPS)
+  secure: config.env === "production",
   sameSite: "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };

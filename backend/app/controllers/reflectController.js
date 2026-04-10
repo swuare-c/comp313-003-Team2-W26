@@ -49,8 +49,8 @@ exports.reflect = async (req, res) => {
     let reply;
     let source;
 
-    // If there's no key, use fallback so the app still works
-    if (!config.openaiApiKey) {
+    // If there's no key or no client, use fallback so the app still works
+    if (!config.openaiApiKey || !openai) {
       reply = fallbackReply(text);
       source = "fallback_no_api_key";
     } else {

@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "express-server/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "react-client/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "express-server/server.js"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "react-client/assets/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "react-client/favicon.ico"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "react-client/index.html"
+    }
+  ]
+}
